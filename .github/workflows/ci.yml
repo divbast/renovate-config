@@ -1,0 +1,72 @@
+# SPDX-License-Identifier: BSD-2-Clause
+# SPDX-FileCopyrightText: 2026 Aryan Ameri <github@aryan.ameri.coffee>
+
+# The validate job runs the same command as `just validate`, and the lint job
+# calls `just lint`.
+
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Installs mise.toml tools
+      - uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+      - run: just lint
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  validate:
+    name: validate
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Validate the presets with Renovate's own validator
+        run: docker run --rm -v "$PWD:/w:ro" -w /w ghcr.io/renovatebot/renovate:44.227.4@sha256:fe058db9710840a4821f20190b3769e3ce709a049b8640aa2bf5f044969fe702 renovate-config-validator --strict default.json app.json renovate.json
+
+  # The one check main's ruleset requires, so the job list can change without
+  # touching the ruleset. GitHub counts a skipped required check as passing,
+  # so this runs always and treats a skipped or cancelled job as a failure.
+  required:
+    name: required
+    needs: [lint, validate]
+    if: always()
+    runs-on: ubuntu-26.04
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Fail unless every needed job succeeded
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          for result in ${RESULTS}; do
+            if [ "${result}" != success ]; then
+              echo "a required job ended ${result}" >&2
+              exit 1
+            fi
+          done
