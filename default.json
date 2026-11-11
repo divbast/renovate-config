@@ -1,0 +1,46 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "semanticCommits": "disabled",
+  "rebaseWhen": "behind-base-branch",
+  "automerge": true,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "platformAutomerge": false,
+  "ignoreTests": false,
+  "commitMessageAction": "update",
+  "commitBody": "{{#if (equals updateType 'digest')}}Upstream rebuilt the tag, so the pinned digest is stale.{{else}}Upstream published a newer release.{{/if}}\n\nDeveloped-by: Aryan Ameri <github@aryan.ameri.coffee>\nAssisted-by: <Renovate:renovate-{{{renovateVersion}}}>",
+  "packageRules": [
+    {
+      "description": "Subject prefix for the local toolchain: mise.toml, composer-pinned tools and Go modules. Kernel style, 'subsystem: short description', because these are commits on main like any other.",
+      "matchManagers": [
+        "mise",
+        "composer",
+        "gomod"
+      ],
+      "commitMessagePrefix": "tools:"
+    },
+    {
+      "description": "Subject prefix for the workflows' action pins and the Renovate image itself.",
+      "matchManagers": ["github-actions"],
+      "commitMessagePrefix": "ci:"
+    },
+    {
+      "description": "jq tags releases as jq-1.8.2. mise strips that prefix from aqua's registry entry; Renovate does not read the aqua registry, so without this every candidate version is discarded as unparseable and no PR is ever raised.",
+      "matchDepNames": ["aqua:jqlang/jq"],
+      "extractVersion": "^jq-(?<version>.+)"
+    },
+    {
+      "description": "The go line in go.mod is a language version, not a library. Raising it can enable newer vet checks, which ride on the go line and can fail a build that passed before, so a person approves it from the Dependency Dashboard.",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["golang"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "github.com/divbast/ci reaches each repository through a replace to a local .ci/ checkout that the workflow refs pin, so the go.mod version is a placeholder. The github-actions digest on those refs is the one dependency that moves it, and a gomod PR would only churn the placeholder.",
+      "matchManagers": ["gomod"],
+      "matchDepNames": ["github.com/divbast/ci"],
+      "enabled": false
+    }
+  ]
+}

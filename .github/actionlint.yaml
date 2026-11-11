@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: BSD-2-Clause
+# SPDX-FileCopyrightText: 2026 Aryan Ameri <github@aryan.ameri.coffee>
+
+# actionlint's built-in runner list predates ubuntu-26.04, which is a
+# GitHub-hosted runner, not a self-hosted one.
+self-hosted-runner:
+  labels:
+    - ubuntu-26.04
+    - ubuntu-26.04-arm

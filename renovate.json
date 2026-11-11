@@ -1,0 +1,12 @@
+{
+  "extends": ["github>divbast/renovate-config"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "The Renovate image the validator runs, written as a docker run argument in ci.yml and the justfile, where no default manager reads it. Both copies move in one PR.",
+      "managerFilePatterns": ["/^\\.github/workflows/ci\\.yml$/", "/^justfile$/"],
+      "matchStrings": ["(?<depName>ghcr\\.io/renovatebot/renovate):(?<currentValue>\\S+?)@(?<currentDigest>sha256:[a-f0-9]{64})"],
+      "datasourceTemplate": "docker"
+    }
+  ]
+}
