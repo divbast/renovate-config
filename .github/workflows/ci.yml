@@ -47,7 +47,7 @@ jobs:
           persist-credentials: false
 
       - name: Validate the presets with Renovate's own validator
-        run: docker run --rm -v "$PWD:/w:ro" -w /w ghcr.io/renovatebot/renovate:44.227.4@sha256:fe058db9710840a4821f20190b3769e3ce709a049b8640aa2bf5f044969fe702 renovate-config-validator --strict default.json app.json renovate.json
+        run: docker run --rm -v "$PWD:/w:ro" -w /w ghcr.io/renovatebot/renovate:44.227.4@sha256:fe058db9710840a4821f20190b3769e3ce709a049b8640aa2bf5f044969fe702 renovate-config-validator --strict --no-global default.json app.json renovate.json
 
   # The one check main's ruleset requires, so the job list can change without
   # touching the ruleset. GitHub counts a skipped required check as passing,
