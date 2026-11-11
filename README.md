@@ -11,10 +11,10 @@ copy of the same settings.
 
 - `default.json` is for every divbast repository. It sets the commit style,
   the squash automerge, the subject prefix for tool and workflow updates, and
-  the Go and jq rules that apply wherever those tools appear.
-- `app.json` is for the repositories that build an image. It adds the `build:`
-  prefix for Dockerfile updates, the trivy lookup, and the FrankenPHP label
-  and PR note.
+  the `build:` prefix for Dockerfile updates, the trivy lookup, and the Go and
+  jq rules that apply wherever those tools appear.
+- `app.json` is for the repositories that build an image. It adds only the
+  FrankenPHP label and PR note.
 
 ## Using them
 
