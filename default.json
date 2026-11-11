@@ -26,6 +26,19 @@
       "commitMessagePrefix": "ci:"
     },
     {
+      "description": "ci's pin check refuses a repository whose divbast/ci refs name more than one SHA, and a repository calls several reusable workflows on several lines. Every ref therefore has to move in one commit, so they share one group and one PR.",
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["divbast/ci"],
+      "groupName": "divbast/ci"
+    },
+    {
+      "description": "A new major of divbast/ci means a breaking change to a reusable workflow's inputs, so a person approves it from the Dependency Dashboard. Minor and patch releases keep automerging.",
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["divbast/ci"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
+    },
+    {
       "description": "jq tags releases as jq-1.8.2. mise strips that prefix from aqua's registry entry; Renovate does not read the aqua registry, so without this every candidate version is discarded as unparseable and no PR is ever raised.",
       "matchDepNames": ["aqua:jqlang/jq"],
       "extractVersion": "^jq-(?<version>.+)"
