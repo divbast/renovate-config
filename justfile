@@ -16,7 +16,7 @@ setup:
 
 # Check the presets and this repository's own config against Renovate's schema
 validate:
-    docker run --rm -v "$PWD:/w:ro" -w /w ghcr.io/renovatebot/renovate:44.227.4@sha256:fe058db9710840a4821f20190b3769e3ce709a049b8640aa2bf5f044969fe702 renovate-config-validator --strict --no-global default.json app.json renovate.json
+    docker run --rm -v "$PWD:/w:ro" -w /w ghcr.io/renovatebot/renovate:44.235.0@sha256:c36391712d77f9912943d8922d04d4fd1ee393dbde330b9565cb0e763ac7764c renovate-config-validator --strict --no-global default.json app.json renovate.json
 
 # Verify every action is a SHA
 actions-check:
