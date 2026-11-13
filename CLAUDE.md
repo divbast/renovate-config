@@ -51,6 +51,19 @@ files carry a `.license` sidecar, since JSON has no comments.
   does on `test/fixtures/bad-manager.json` and `bad-custom-manager.json`
 - `just ci` runs every gate. Run it before committing
 
+## Tests that copy these regexes
+
+Two repositories test their workflows against copies of this preset's regex
+managers' `matchStrings`, and a copy that drifts from `default.json` passes
+while Renovate stops moving the pin. Change a `matchStrings` here and change
+these with it:
+
+- `divbast/ci`, `internal/workflows/workflows_test.go`: `registryManager`
+  (read by `TestRehearseRegistryPinned`), and `buildkitManager`,
+  `sbomManager` and `miseManager` (read by `TestBuildToolsPinned`)
+- `divbast/frankenphp`, `cmd/frankenphp-manifest/workflow_test.go`:
+  `buildkitPin` and `misePin` (read by `TestBuildToolsPinned`)
+
 ## Workflows
 
 `ci.yml`, `renovate.yml` and `stall.yml` are thin callers of `divbast/ci`,
