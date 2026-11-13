@@ -12,7 +12,14 @@ copy of the same settings.
 - `default.json` is for every divbast repository. It sets the commit style,
   the squash automerge, the subject prefix for tool and workflow updates, and
   the `build:` prefix for Dockerfile updates, the trivy lookup, and the Go and
-  jq rules that apply wherever those tools appear.
+  jq rules that apply wherever those tools appear. It lifts Renovate's hourly
+  PR limit, so a repository with many pending updates is not held back, and
+  it carries four regex managers for build tools that no default manager
+  reads in workflows: the BuildKit image (`image=moby/buildkit:v...@sha256:`),
+  the SBOM scanner (`generator=docker/buildkit-syft-scanner:...@sha256:`),
+  the rehearsal registry (a `docker run ... registry:...@sha256:` line under
+  a `# renovate: registry` marker) and `MISE_VERSION` (under a
+  `# renovate: datasource=github-releases depName=jdx/mise` marker).
 - `app.json` is for the repositories that build an image. It adds only the
   FrankenPHP label and PR note.
 
@@ -37,7 +44,9 @@ such as the custom managers for its pinned inputs.
 
 `just validate` runs Renovate's own `renovate-config-validator --strict` over
 the presets and this repository's `renovate.json`, in a pinned Renovate
-image. `just ci` adds the lint gates (pinact, zizmor, actionlint, ShellCheck
+image. `check-managers.js` then runs in the same image and fails when a
+`matchManagers` value names no manager of that Renovate, which the validator
+does not catch and Renovate itself ignores. `just ci` adds the lint gates (pinact, zizmor, actionlint, ShellCheck
 and `reuse lint`), which come from `divbast/ci`'s `common.just`. `just setup`
 checks `divbast/ci` out into `.ci` at the commit the workflows pin and
 installs the toolchain from `mise.toml`. The gates that call GitHub need a

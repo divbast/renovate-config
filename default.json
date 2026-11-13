@@ -1,6 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
+  "prHourlyLimit": 0,
   "semanticCommits": "disabled",
   "rebaseWhen": "behind-base-branch",
   "automerge": true,
@@ -10,6 +11,36 @@
   "ignoreTests": false,
   "commitMessageAction": "update",
   "commitBody": "{{#if (equals updateType 'digest')}}Upstream rebuilt the tag, so the pinned digest is stale.{{else}}Upstream published a newer release.{{/if}}\n\nDeveloped-by: Aryan Ameri <github@aryan.ameri.coffee>\nAssisted-by: <Renovate:renovate-{{{renovateVersion}}}>",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "The BuildKit image docker/setup-buildx-action runs, pinned by a driver-opts line, where no default manager reads it.",
+      "managerFilePatterns": ["/^\\.github/workflows/[^/]+\\.ya?ml$/"],
+      "matchStrings": ["image=(?<depName>moby/buildkit):(?<currentValue>v[0-9.]+)@(?<currentDigest>sha256:[a-f0-9]{64})"],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "The SBOM scanner image BuildKit runs for --attest type=sbom, pinned as its generator argument, where no default manager reads it.",
+      "managerFilePatterns": ["/^\\.github/workflows/[^/]+\\.ya?ml$/"],
+      "matchStrings": ["generator=(?<depName>docker/buildkit-syft-scanner):(?<currentValue>[0-9.]+)@(?<currentDigest>sha256:[a-f0-9]{64})"],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "The registry image a workflow starts to rehearse a publish. Only the line after a '# renovate: registry' marker is read, so no other registry image in a workflow is touched.",
+      "managerFilePatterns": ["/^\\.github/workflows/[^/]+\\.ya?ml$/"],
+      "matchStrings": ["# renovate: registry\\n[^\\n]*docker run [^\\n]* (?<depName>registry):(?<currentValue>[0-9.]+)@(?<currentDigest>sha256:[a-f0-9]{64})"],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "The mise release jdx/mise-action installs, pinned as MISE_VERSION in a workflow env block under a '# renovate:' marker. mise tags its releases v2026.11.7; the action takes the bare form, which is what the README shows, so the v is stripped.",
+      "managerFilePatterns": ["/^\\.github/workflows/[^/]+\\.ya?ml$/"],
+      "matchStrings": ["# renovate: datasource=(?<datasource>github-releases) depName=(?<depName>jdx/mise)\\n\\s*MISE_VERSION: [\"']?(?<currentValue>[0-9.]+)[\"']?"],
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    }
+  ],
   "packageRules": [
     {
       "description": "Subject prefix for the local toolchain: mise.toml, composer-pinned tools and Go modules. Kernel style, 'subsystem: short description', because these are commits on main like any other.",
@@ -21,8 +52,13 @@
       "commitMessagePrefix": "tools:"
     },
     {
-      "description": "Subject prefix for the workflows' action pins and the Renovate image itself.",
-      "matchManagers": ["github-actions"],
+      "description": "Subject prefix for the workflows' action pins.",
+      "matchManagers": ["github-actions"]
+    },
+    {
+      "description": "Subject prefix for the build tools the shared regex managers above pin in workflows. A manager cannot carry commitMessagePrefix itself, and the github-actions rule does not reach a custom.regex upgrade.",
+      "matchManagers": ["custom.regex"],
+      "matchDepNames": ["moby/buildkit", "docker/buildkit-syft-scanner", "registry", "jdx/mise"],
       "commitMessagePrefix": "ci:"
     },
     {
@@ -37,7 +73,7 @@
       "groupName": "divbast/ci"
     },
     {
-      "description": "A new major of divbast/ci means a breaking change to a reusable workflow's inputs, so a person approves it from the Dependency Dashboard. Minor and patch releases keep automerging.",
+      "description": "A new major of divbast/ci is minted by any commit there that carries a Breaking-change: trailer, so a person approves it from the Dependency Dashboard. Minor and patch releases keep automerging.",
       "matchManagers": ["github-actions"],
       "matchPackageNames": ["divbast/ci"],
       "matchUpdateTypes": ["major"],
@@ -56,9 +92,10 @@
       "versioning": "docker"
     },
     {
-      "description": "The go line in go.mod is a language version, not a library. Raising it can enable newer vet checks, which ride on the go line and can fail a build that passed before, so a person approves it from the Dependency Dashboard.",
+      "description": "The go line in go.mod is a language version, not a library. Bump, not widen, because go-mod-directive versioning reads go 1.27.0 as ^1.27.0 and would otherwise never propose anything. Raising it can enable newer vet checks, which ride on the go line and can fail a build that passed before, so a person approves it from the Dependency Dashboard.",
       "matchManagers": ["gomod"],
       "matchDepTypes": ["golang"],
+      "rangeStrategy": "bump",
       "dependencyDashboardApproval": true
     },
     {
