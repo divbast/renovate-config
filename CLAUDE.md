@@ -6,6 +6,8 @@
 The shared Renovate presets for the divbast organisation: `default.json` for
 every repository and `app.json` for repositories that build an image. Every
 rule carries a `description` saying why it exists. Keep that when adding one.
+A custom manager cannot carry `commitMessagePrefix`; give its depNames a
+`custom.regex` packageRule instead.
 
 ## CRITICAL: Git Commit Message Format
 
@@ -43,7 +45,9 @@ files carry a `.license` sidecar, since JSON has no comments.
 
 - `just setup` fetches `divbast/ci` into `.ci` at the pinned commit and
   installs the pinned toolchain
-- `just validate` runs Renovate's validator over the presets
+- `just validate` runs Renovate's validator over the presets, then
+  `check-managers.js`, which rejects a misspelt `matchManagers` value, and
+  proves it still does on `test/fixtures/bad-manager.json`
 - `just ci` runs every gate. Run it before committing
 
 ## Workflows
