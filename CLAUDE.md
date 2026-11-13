@@ -46,8 +46,9 @@ files carry a `.license` sidecar, since JSON has no comments.
 - `just setup` fetches `divbast/ci` into `.ci` at the pinned commit and
   installs the pinned toolchain
 - `just validate` runs Renovate's validator over the presets, then
-  `check-managers.js`, which rejects a misspelt `matchManagers` value, and
-  proves it still does on `test/fixtures/bad-manager.json`
+  `check-managers.js`, which rejects a misspelt `matchManagers` value
+  (custom managers by exact name: `custom.regx` fails), and proves it still
+  does on `test/fixtures/bad-manager.json` and `bad-custom-manager.json`
 - `just ci` runs every gate. Run it before committing
 
 ## Workflows

@@ -46,9 +46,12 @@ such as the custom managers for its pinned inputs.
 the presets and this repository's `renovate.json`, in a pinned Renovate
 image. `check-managers.js` then runs in the same image and fails when a
 `matchManagers` value names no manager of that Renovate, which the validator
-does not catch and Renovate itself ignores. The recipe also runs it over
-`test/fixtures/bad-manager.json` and requires that run to fail, so the check
-cannot quietly stop checking.
+does not catch and Renovate itself ignores. The custom managers are accepted
+by exact name, `custom.regex` and `custom.jsonata`, so `custom.regx` fails
+like any other misspelling. The recipe also runs it over
+`test/fixtures/bad-manager.json` and `test/fixtures/bad-custom-manager.json`
+and requires each run to fail, naming the bad value, so the check cannot
+quietly stop checking.
 
 `just ci` adds the lint gates (pinact, zizmor, actionlint, ShellCheck and
 `reuse lint`), which come from `divbast/ci`'s `common.just`. `just setup`
