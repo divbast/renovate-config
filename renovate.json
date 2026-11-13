@@ -11,7 +11,7 @@
   ],
   "packageRules": [
     {
-      "description": "The validator image is read only by the regex manager above, so the github-actions rule in the preset does not reach it. Without this its commits lose the ci: prefix, since the preset's ci: rule does not reach a custom.regex upgrade.",
+      "description": "The validator image is upgraded by the regex manager above, so it is a custom.regex upgrade. The preset's ci: rules reach the github-actions manager and only the custom.regex depNames they list, and this image is neither, so without this rule its commits lose the ci: prefix.",
       "matchManagers": ["custom.regex"],
       "matchDepNames": ["ghcr.io/renovatebot/renovate"],
       "commitMessagePrefix": "ci:"

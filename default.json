@@ -52,7 +52,7 @@
       "commitMessagePrefix": "tools:"
     },
     {
-      "description": "Subject prefix for the workflows' action pins.",
+      "description": "Subject prefix for the github-actions manager's upgrades: the action pins and the reusable-workflow refs, divbast/ci's among them.",
       "matchManagers": ["github-actions"],
       "commitMessagePrefix": "ci:"
     },

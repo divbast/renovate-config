@@ -1,0 +1,9 @@
+{
+  "packageRules": [
+    {
+      "description": "Deliberately misspelt: custom.regx is no manager, and check-managers.js must reject it rather than wave through anything under custom.",
+      "matchManagers": ["custom.regx"],
+      "commitMessagePrefix": "ci:"
+    }
+  ]
+}

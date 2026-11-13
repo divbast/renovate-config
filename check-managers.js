@@ -13,7 +13,9 @@
 const fs = require("node:fs");
 const { getManagerList } = require("/usr/local/renovate/dist/modules/manager/index.js");
 
-const known = new Set(getManagerList());
+// getManagerList() leaves the custom managers out; Renovate names them
+// custom.<customType>, and these are the two it has.
+const known = new Set([...getManagerList(), "custom.regex", "custom.jsonata"]);
 const files = process.argv.slice(2);
 if (files.length === 0) {
   console.error("usage: node check-managers.js <config.json>...");
@@ -35,9 +37,9 @@ function* managers(node) {
 let bad = 0;
 for (const file of files) {
   for (const name of managers(JSON.parse(fs.readFileSync(file, "utf8")))) {
-    // A leading "!" negates; custom.regex and custom.jsonata are the custom managers
+    // A leading "!" negates
     const bare = String(name).replace(/^!/, "");
-    if (!known.has(bare) && !bare.startsWith("custom.")) {
+    if (!known.has(bare)) {
       console.error(`${file}: matchManagers names no manager: ${name}`);
       bad = 1;
     }

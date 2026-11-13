@@ -49,11 +49,14 @@ validate:
     docker run --rm -v "$PWD:/w:ro" -w /w "${image}" renovate-config-validator --strict --no-global default.json app.json renovate.json
     check=(docker run --rm -v "$PWD:/w:ro" -w /w --entrypoint node "${image}" check-managers.js)
     "${check[@]}" default.json app.json renovate.json
-    # The check must also fail, naming the value, on a fixture that misspells one
-    if out=$("${check[@]}" test/fixtures/bad-manager.json 2>&1) || [[ "${out}" != *"github-action"* ]]; then
-        printf 'validate: check-managers.js did not reject test/fixtures/bad-manager.json:\n%s\n' "${out}" >&2
-        exit 1
-    fi
+    # The check must also fail, naming the value, on each fixture that misspells one
+    for fixture in bad-manager:github-action bad-custom-manager:custom.regx; do
+        file=test/fixtures/${fixture%%:*}.json
+        if out=$("${check[@]}" "${file}" 2>&1) || [[ "${out}" != *"names no manager: ${fixture#*:}"* ]]; then
+            printf 'validate: check-managers.js did not reject %s:\n%s\n' "${file}" "${out}" >&2
+            exit 1
+        fi
+    done
 
 # Every lint gate
 lint:
