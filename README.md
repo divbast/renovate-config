@@ -37,13 +37,33 @@ such as the custom managers for its pinned inputs.
 
 `just validate` runs Renovate's own `renovate-config-validator --strict` over
 the presets and this repository's `renovate.json`, in a pinned Renovate
-image. `just ci` adds the lint gates (pinact, zizmor, actionlint and
-`reuse lint`). `just setup` installs the toolchain from `mise.toml`.
+image. `just ci` adds the lint gates (pinact, zizmor, actionlint, ShellCheck
+and `reuse lint`), which come from `divbast/ci`'s `common.just`. `just setup`
+checks `divbast/ci` out into `.ci` at the commit the workflows pin and
+installs the toolchain from `mise.toml`. The gates that call GitHub need a
+fine-grained `GITHUB_TOKEN`; see
+[ci's README](https://github.com/divbast/ci#local-github-token).
 
 ## Workflows
 
-CI and the self-hosted Renovate run are written out in this repository for
-now. In stage 2b they move onto the shared workflows in `divbast/ci`.
+This repository calls the shared workflows in `divbast/ci`, all at one
+pinned release:
+
+- `ci.yml` runs ci's `lint.yml`, and a `validate` job of its own that runs the
+  same validator as `just validate`. A `required` job needs both, and is the
+  one check main's ruleset asks for.
+- `renovate.yml` runs self-hosted Renovate for this repository alone. It
+  merges its own pull requests only while the repository variable
+  `RENOVATE_CONFIG_AUTOMERGE` is `enabled`.
+- `stall.yml` fails each day that updates have stopped flowing: a Renovate
+  pull request stuck, or Renovate silent.
+
+Renovate moves every `divbast/ci` ref in one pull request, because ci's pin
+check refuses workflows that name more than one commit. The preset puts
+those refs in the `divbast/ci` group, and holds a new major of `divbast/ci`
+for approval on the Dependency Dashboard. A major is minted by any commit in
+ci that declares a `Breaking-change:` trailer; minor and patch releases keep
+merging by themselves.
 
 ## Licence
 

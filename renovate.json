@@ -8,5 +8,13 @@
       "matchStrings": ["(?<depName>ghcr\\.io/renovatebot/renovate):(?<currentValue>\\S+?)@(?<currentDigest>sha256:[a-f0-9]{64})"],
       "datasourceTemplate": "docker"
     }
+  ],
+  "packageRules": [
+    {
+      "description": "The validator image is read only by the regex manager above, so the github-actions rule in the preset does not reach it. Without this its commits lose the ci: prefix, since the prefix otherwise comes from whichever manager's upgrade sorts first in the branch.",
+      "matchManagers": ["custom.regex"],
+      "matchDepNames": ["ghcr.io/renovatebot/renovate"],
+      "commitMessagePrefix": "ci:"
+    }
   ]
 }
