@@ -53,7 +53,7 @@ files carry a `.license` sidecar, since JSON has no comments.
 
 ## Tests that copy these regexes
 
-Two repositories test their workflows against copies of this preset's regex
+Three repositories test their workflows against copies of this preset's regex
 managers' `matchStrings`, and a copy that drifts from `default.json` passes
 while Renovate stops moving the pin. Change a `matchStrings` here and change
 these with it:
@@ -63,6 +63,8 @@ these with it:
   `sbomManager` and `miseManager` (read by `TestBuildToolsPinned`)
 - `divbast/frankenphp`, `cmd/frankenphp-manifest/workflow_test.go`:
   `buildkitPin` and `misePin` (read by `TestBuildToolsPinned`)
+- `divbast/infra`, `internal/repotest/workflows_test.go`: `miseMarker`
+  (read by `miseVersionPinned`)
 
 ## Workflows
 
