@@ -3,3 +3,6 @@
 
 .agents/
 .superpowers/
+
+# divbast/ci, checked out by `just setup` at the commit the workflows pin
+.ci/

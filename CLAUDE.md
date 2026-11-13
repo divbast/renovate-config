@@ -41,6 +41,15 @@ files carry a `.license` sidecar, since JSON has no comments.
 
 ## Key commands
 
-- `just setup` installs the pinned toolchain
+- `just setup` fetches `divbast/ci` into `.ci` at the pinned commit and
+  installs the pinned toolchain
 - `just validate` runs Renovate's validator over the presets
 - `just ci` runs every gate. Run it before committing
+
+## Workflows
+
+`ci.yml`, `renovate.yml` and `stall.yml` are thin callers of `divbast/ci`,
+every ref at one pinned commit. `validate` is the one job written out here,
+and `required` needs it and ci's `lint`. The validator image is written in
+`ci.yml` and the `justfile`; a regex manager in `renovate.json` moves both
+copies together, and a rule there keeps the `ci:` prefix on its commits.

@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2026 Aryan Ameri <github@aryan.ameri.coffee>
 
 # The validate job runs the same command as `just validate`, and the lint job
-# calls `just lint`.
+# calls divbast/ci's lint.yml, which runs `just lint`.
 
 name: ci
 
@@ -20,20 +20,9 @@ concurrency:
 jobs:
   lint:
     name: lint
-    runs-on: ubuntu-26.04
-    timeout-minutes: 10
+    uses: divbast/ci/.github/workflows/lint.yml@1b8878f21afec6164c6ef155c7cad7b8b87d0c9d # v1.12.0
     permissions:
       contents: read
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      # Installs mise.toml tools
-      - uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
-      - run: just lint
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   validate:
     name: validate
