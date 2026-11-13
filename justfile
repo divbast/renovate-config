@@ -47,7 +47,13 @@ validate:
     set -euo pipefail
     image=ghcr.io/renovatebot/renovate:44.237.1@sha256:f80455e144c085aa4b71ed4c0f89477675217de742464e09a09868c4917e8d10
     docker run --rm -v "$PWD:/w:ro" -w /w "${image}" renovate-config-validator --strict --no-global default.json app.json renovate.json
-    docker run --rm -v "$PWD:/w:ro" -w /w --entrypoint node "${image}" check-managers.js default.json app.json renovate.json
+    check=(docker run --rm -v "$PWD:/w:ro" -w /w --entrypoint node "${image}" check-managers.js)
+    "${check[@]}" default.json app.json renovate.json
+    # The check must also fail, naming the value, on a fixture that misspells one
+    if out=$("${check[@]}" test/fixtures/bad-manager.json 2>&1) || [[ "${out}" != *"github-action"* ]]; then
+        printf 'validate: check-managers.js did not reject test/fixtures/bad-manager.json:\n%s\n' "${out}" >&2
+        exit 1
+    fi
 
 # Every lint gate
 lint:

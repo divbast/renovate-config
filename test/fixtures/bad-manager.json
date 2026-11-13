@@ -1,0 +1,9 @@
+{
+  "packageRules": [
+    {
+      "description": "Deliberately misspelt: check-managers.js must reject it.",
+      "matchManagers": ["github-action"],
+      "commitMessagePrefix": "ci:"
+    }
+  ]
+}

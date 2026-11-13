@@ -46,8 +46,12 @@ such as the custom managers for its pinned inputs.
 the presets and this repository's `renovate.json`, in a pinned Renovate
 image. `check-managers.js` then runs in the same image and fails when a
 `matchManagers` value names no manager of that Renovate, which the validator
-does not catch and Renovate itself ignores. `just ci` adds the lint gates (pinact, zizmor, actionlint, ShellCheck
-and `reuse lint`), which come from `divbast/ci`'s `common.just`. `just setup`
+does not catch and Renovate itself ignores. The recipe also runs it over
+`test/fixtures/bad-manager.json` and requires that run to fail, so the check
+cannot quietly stop checking.
+
+`just ci` adds the lint gates (pinact, zizmor, actionlint, ShellCheck and
+`reuse lint`), which come from `divbast/ci`'s `common.just`. `just setup`
 checks `divbast/ci` out into `.ci` at the commit the workflows pin and
 installs the toolchain from `mise.toml`. The gates that call GitHub need a
 fine-grained `GITHUB_TOKEN`; see

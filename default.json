@@ -53,7 +53,8 @@
     },
     {
       "description": "Subject prefix for the workflows' action pins.",
-      "matchManagers": ["github-actions"]
+      "matchManagers": ["github-actions"],
+      "commitMessagePrefix": "ci:"
     },
     {
       "description": "Subject prefix for the build tools the shared regex managers above pin in workflows. A manager cannot carry commitMessagePrefix itself, and the github-actions rule does not reach a custom.regex upgrade.",
