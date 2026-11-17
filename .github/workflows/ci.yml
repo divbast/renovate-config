@@ -36,11 +36,11 @@ jobs:
           persist-credentials: false
 
       - name: Validate the presets with Renovate's own validator
-        run: docker run --rm -v "$PWD:/w:ro" -w /w ghcr.io/renovatebot/renovate:44.249.2@sha256:0bae072a84222163d0883c32f8ebf5521b6ccd625b468ecee454895c9f460cbe renovate-config-validator --strict --no-global default.json app.json renovate.json
+        run: docker run --rm -v "$PWD:/w:ro" -w /w ghcr.io/renovatebot/renovate:44.251.0@sha256:64adaabe8ee3e34820c2b044b5f87e281aa278bf53e5d76df2ce800f9cc9407a renovate-config-validator --strict --no-global default.json app.json renovate.json
 
       - name: Check that every matchManagers value names a manager
         run: |
-          check=(docker run --rm -v "$PWD:/w:ro" -w /w --entrypoint node ghcr.io/renovatebot/renovate:44.249.2@sha256:0bae072a84222163d0883c32f8ebf5521b6ccd625b468ecee454895c9f460cbe check-managers.js)
+          check=(docker run --rm -v "$PWD:/w:ro" -w /w --entrypoint node ghcr.io/renovatebot/renovate:44.251.0@sha256:64adaabe8ee3e34820c2b044b5f87e281aa278bf53e5d76df2ce800f9cc9407a check-managers.js)
           "${check[@]}" default.json app.json renovate.json
           # The check must also fail, naming the value, on a fixture that misspells one
           if out=$("${check[@]}" test/fixtures/bad-manager.json 2>&1) || [[ "${out}" != *"github-action"* ]]; then
