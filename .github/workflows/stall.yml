@@ -25,7 +25,7 @@ concurrency:
 jobs:
   stall:
     name: stall
-    uses: divbast/ci/.github/workflows/stall.yml@afe1246153f4331b7910873fcc3123f3196d70f5 # v2.9.0
+    uses: divbast/ci/.github/workflows/stall.yml@3ad1e2585a3c6b1ae5fba6cefa92119784b2a678 # v3.5.0
     with:
       checks: '["open","stuck","renovate"]'
     # Everything stall.yml's job asks for, since a called job gets no more
