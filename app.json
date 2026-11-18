@@ -6,6 +6,19 @@
       "matchDepNames": ["ghcr.io/divbast/frankenphp"],
       "labels": ["frankenphp"],
       "prBodyNotes": ["The new binary's attestation is verified in CI before the image builds."]
+    },
+    {
+      "description": "The DHI .NET SDK and runtime move together: TargetLatestRuntimePatch makes an app need the runtime patch its SDK knows, so an SDK bump without the matching runtime bump leaves the build broken.",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["dhi.io/dotnet", "dhi.io/aspnetcore"],
+      "groupName": "dhi .NET SDK and runtime"
+    },
+    {
+      "description": "A .NET major is due only when the app's upstream retargets, and it then moves with the app's own bump, so it waits for approval on the Dependency Dashboard.",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["dhi.io/dotnet", "dhi.io/aspnetcore"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
     }
   ]
 }
