@@ -20,8 +20,10 @@ copy of the same settings.
   the rehearsal registry (a `docker run ... registry:...@sha256:` line under
   a `# renovate: registry` marker) and `MISE_VERSION` (under a
   `# renovate: datasource=github-releases depName=jdx/mise` marker).
-- `app.json` is for the repositories that build an image. It adds only the
-  FrankenPHP label and PR note.
+- `app.json` is for the repositories that build an image. It adds the
+  FrankenPHP label and PR note, groups `dhi.io/dotnet` and
+  `dhi.io/aspnetcore` so the .NET SDK and runtime move together, and holds
+  their majors for Dependency Dashboard approval.
 
 ## Using them
 
