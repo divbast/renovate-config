@@ -45,7 +45,7 @@ ci-checkout:
 validate:
     #!/usr/bin/env bash
     set -euo pipefail
-    image=ghcr.io/renovatebot/renovate:44.257.9@sha256:d6b65ff3562dd499240b23d34ef806ec7e5fd2675e4236a027dfb36774f2aa75
+    image=ghcr.io/renovatebot/renovate:44.259.0@sha256:63bec0c6e61553bf30c623f4ebe7e6ae087118c050288f9d47f9a6ab0f8f9bfe
     docker run --rm -v "$PWD:/w:ro" -w /w "${image}" renovate-config-validator --strict --no-global default.json app.json renovate.json
     check=(docker run --rm -v "$PWD:/w:ro" -w /w --entrypoint node "${image}" check-managers.js)
     "${check[@]}" default.json app.json renovate.json
