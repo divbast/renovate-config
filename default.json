@@ -94,8 +94,9 @@
       "versioning": "docker"
     },
     {
-      "description": "A Go module release waits 7 days before Renovate proposes it, as divbast/pisati's npm packages do, so a release that is pulled or fixed in its first days is caught before a divbast repository takes it. The wait covers every gomod update, the go and toolchain lines of go.mod among them. Security updates are not held: Renovate's vulnerabilityAlerts sets minimumReleaseAge to null, which overrides this rule, so they open at once.",
+      "description": "A Go module release waits 7 days before Renovate proposes it, as divbast/pisati's npm packages do, so a release that is pulled or fixed in its first days is caught before a divbast repository takes it. The go and toolchain lines of go.mod are not held: they name Go's own releases, not modules, and a Go point release often carries security fixes. Security updates are not held either: Renovate's vulnerabilityAlerts sets minimumReleaseAge to null, which overrides this rule, so they open at once.",
       "matchManagers": ["gomod"],
+      "matchDatasources": ["go"],
       "minimumReleaseAge": "7 days"
     },
     {
