@@ -26,7 +26,12 @@ copy of the same settings.
 - `app.json` is for the repositories that build an image. It adds the
   FrankenPHP label and PR note, groups `dhi.io/dotnet` and
   `dhi.io/aspnetcore` so the .NET SDK and runtime move together, and holds
-  their majors for Dependency Dashboard approval.
+  their majors for Dependency Dashboard approval. For a Python app, it
+  groups the `dhi.io/python` runtime and `-dev` images, digests included,
+  gives a Python package a repository's own regex manager pins the
+  `build:` prefix, and keeps Renovate's `pip_requirements` and
+  `pip-compile` managers off every file under `python/`, where the
+  generated locks live.
 
 ## Using them
 
