@@ -31,7 +31,8 @@ copy of the same settings.
   gives a Python package a repository's own regex manager pins the
   `build:` prefix, and keeps Renovate's `pip_requirements` and
   `pip-compile` managers off every file under `python/`, where the
-  generated locks live.
+  generated locks live, and under any `testdata/` folder, where a test's
+  sample requirements file is never installed.
 
 ## Using them
 
