@@ -19,7 +19,10 @@ copy of the same settings.
   the SBOM scanner (`generator=docker/buildkit-syft-scanner:...@sha256:`),
   the rehearsal registry (a `docker run ... registry:...@sha256:` line under
   a `# renovate: registry` marker) and `MISE_VERSION` (under a
-  `# renovate: datasource=github-releases depName=jdx/mise` marker).
+  `# renovate: datasource=github-releases depName=jdx/mise` marker). It
+  holds each Go module release for 7 days before proposing it, but not a Go
+  release on go.mod's go or toolchain line, and it opens a security update
+  at once.
 - `app.json` is for the repositories that build an image. It adds the
   FrankenPHP label and PR note, groups `dhi.io/dotnet` and
   `dhi.io/aspnetcore` so the .NET SDK and runtime move together, and holds

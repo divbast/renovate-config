@@ -94,6 +94,12 @@
       "versioning": "docker"
     },
     {
+      "description": "A Go module release waits 7 days before Renovate proposes it, as divbast/pisati's npm packages do, so a release that is pulled or fixed in its first days is caught before a divbast repository takes it. The go and toolchain lines of go.mod are not held: they name Go's own releases, not modules, and a Go point release often carries security fixes. Security updates are not held either: Renovate's vulnerabilityAlerts sets minimumReleaseAge to null, which overrides this rule, so they open at once.",
+      "matchManagers": ["gomod"],
+      "matchDatasources": ["go"],
+      "minimumReleaseAge": "7 days"
+    },
+    {
       "description": "The go line in go.mod is a language version, not a library. Bump, not widen, because go-mod-directive versioning reads go 1.27.0 as ^1.27.0 and would otherwise never propose anything. Raising it can enable newer vet checks, which ride on the go line and can fail a build that passed before, so a person approves it from the Dependency Dashboard.",
       "matchManagers": ["gomod"],
       "matchDepTypes": ["golang"],
