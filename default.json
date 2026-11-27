@@ -9,6 +9,15 @@
   "automergeStrategy": "squash",
   "platformAutomerge": false,
   "ignoreTests": false,
+  "minimumReleaseAge": "3 days",
+  "minimumReleaseAgeBehaviour": "timestamp-optional",
+  "logLevelRemap": [
+    {
+      "description": "An update Renovate cannot date, such as a rebuilt digest on a registry that gives no timestamp, is not held, by choice: minimumReleaseAgeBehaviour is timestamp-optional. Renovate still warns, on every run, that it went ahead without a timestamp, and each warning is listed under Repository Problems on the Dependency Dashboard, where it reads as something to fix. Info keeps the line in the run's log and off the dashboard.",
+      "matchMessage": "/^Some (release|upgrade)\\(s\\) did not have a releaseTimestamp, but as we're running with minimumReleaseAgeBehaviour=timestamp-optional, proceeding/",
+      "newLogLevel": "info"
+    }
+  ],
   "commitMessageAction": "update",
   "commitBody": "{{#if (equals updateType 'digest')}}Upstream rebuilt the tag, so the pinned digest is stale.{{else}}Upstream published a newer release.{{/if}}\n\nDeveloped-by: Aryan Ameri <github@aryan.ameri.coffee>\nAssisted-by: <Renovate:renovate-{{{renovateVersion}}}>",
   "customManagers": [
@@ -94,12 +103,6 @@
       "versioning": "docker"
     },
     {
-      "description": "A Go module release waits 7 days before Renovate proposes it, as divbast/pisati's npm packages do, so a release that is pulled or fixed in its first days is caught before a divbast repository takes it. The go and toolchain lines of go.mod are not held: they name Go's own releases, not modules, and a Go point release often carries security fixes. Security updates are not held either: Renovate's vulnerabilityAlerts sets minimumReleaseAge to null, which overrides this rule, so they open at once.",
-      "matchManagers": ["gomod"],
-      "matchDatasources": ["go"],
-      "minimumReleaseAge": "7 days"
-    },
-    {
       "description": "The go line in go.mod is a language version, not a library. Bump, not widen, because go-mod-directive versioning reads go 1.27.0 as ^1.27.0 and would otherwise never propose anything. Raising it can enable newer vet checks, which ride on the go line and can fail a build that passed before, so a person approves it from the Dependency Dashboard.",
       "matchManagers": ["gomod"],
       "matchDepTypes": ["golang"],
@@ -111,6 +114,11 @@
       "matchManagers": ["gomod"],
       "matchDepNames": ["github.com/divbast/ci"],
       "enabled": false
+    },
+    {
+      "description": "Every release of outside code waits 3 days before Renovate proposes it, by minimumReleaseAge above, so a bad or pulled release has time to be found before a divbast repository takes it. divbast's own releases, its actions and reusable workflows, Go modules and images, are built and tested in the divbast organisation, so they never wait. This rule is the preset's last, so no rule above it holds them again. Security updates are not held either: Renovate opens them at once.",
+      "matchPackageNames": ["divbast/**", "github.com/divbast/**", "ghcr.io/divbast/**"],
+      "minimumReleaseAge": null
     }
   ]
 }
