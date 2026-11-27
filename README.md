@@ -20,9 +20,14 @@ copy of the same settings.
   the rehearsal registry (a `docker run ... registry:...@sha256:` line under
   a `# renovate: registry` marker) and `MISE_VERSION` (under a
   `# renovate: datasource=github-releases depName=jdx/mise` marker). It
-  holds each Go module release for 7 days before proposing it, but not a Go
-  release on go.mod's go or toolchain line, and it opens a security update
-  at once.
+  holds every release of outside code for 3 days before proposing it, so a
+  bad or pulled release has time to be found first. It never holds
+  divbast's own (`divbast/**`, `github.com/divbast/**` and
+  `ghcr.io/divbast/**`), which are built and tested in the divbast
+  organisation. An update Renovate cannot date, such as a rebuilt digest
+  on a registry that gives no timestamp, is not held, and Renovate's
+  warning that it went ahead without one is lowered to info, which keeps
+  it off the Dependency Dashboard. It opens a security update at once.
 - `app.json` is for the repositories that build an image. It adds the
   FrankenPHP label and PR note, groups `dhi.io/dotnet` and
   `dhi.io/aspnetcore` so the .NET SDK and runtime move together, and holds
