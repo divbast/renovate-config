@@ -28,6 +28,10 @@ copy of the same settings.
   on a registry that gives no timestamp, is not held, and Renovate's
   warning that it went ahead without one is lowered to info, which keeps
   it off the Dependency Dashboard. It opens a security update at once.
+  It restates Renovate's `ignorePaths` without `**/test/**` and
+  `**/tests/**`, so a dependency inside a test folder gets updates too. A
+  repository that must keep one ignored lists it in its own `ignorePaths`,
+  which replaces this list.
 - `app.json` is for the repositories that build an image. It adds the
   FrankenPHP label and PR note, groups `dhi.io/dotnet` and
   `dhi.io/aspnetcore` so the .NET SDK and runtime move together, and holds
