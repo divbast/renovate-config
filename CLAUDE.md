@@ -53,7 +53,7 @@ files carry a `.license` sidecar, since JSON has no comments.
 
 ## Tests that copy these regexes
 
-Three repositories test their workflows against copies of this preset's regex
+Four repositories test their workflows against copies of this preset's regex
 managers' `matchStrings`, and a copy that drifts from `default.json` passes
 while Renovate stops moving the pin. Change a `matchStrings` here and change
 these with it:
@@ -65,6 +65,8 @@ these with it:
   `buildkitPin` and `misePin` (read by `TestBuildToolsPinned`)
 - `divbast/infra`, `internal/repotest/workflows_test.go`: `miseMarker`
   (read by `miseVersionPinned`)
+- `divbast/native-tools`, `cmd/native-tools-manifest/workflow_test.go`:
+  `buildkitPin` and `misePin` (read by `TestBuildToolsPinned`)
 
 ## Workflows
 
