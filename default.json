@@ -9,6 +9,19 @@
   "automergeStrategy": "squash",
   "platformAutomerge": false,
   "ignoreTests": false,
+  "description": [
+    "ignorePaths replaces config:recommended's list rather than merging with it, so the list is restated: it is the one Renovate 45.1.0's :ignoreModulesAndTests preset gives (lib/config/presets/internal/default.preset.ts, lines 306-317), without **/test/** and **/tests/**. Test folders are read, so that a dependency a test uses, such as a test module's go.mod, gets updates like any other. A repository that must keep one ignored names it in its own renovate.json, as divbast/pisati does for test/acceptance."
+  ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/__tests__/**",
+    "**/__fixtures__/**",
+    "**/.mise/locks/**",
+    "**/.config/mise/locks/**"
+  ],
   "minimumReleaseAge": "3 days",
   "minimumReleaseAgeBehaviour": "timestamp-optional",
   "logLevelRemap": [
